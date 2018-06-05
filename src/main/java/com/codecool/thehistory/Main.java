@@ -8,7 +8,7 @@ public class Main {
 //    }
 
     public static void main(String[] args) {
-        String testString = "one two three four one five one six seven one eight";
+        String testString = "zero one two three four one five one six seven one eight";
         TheHistoryArray myTheHistoryArray = new TheHistoryArray();
         myTheHistoryArray.add(testString);
         myTheHistoryArray.removeWord("one");

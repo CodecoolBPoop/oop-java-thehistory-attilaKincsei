@@ -13,21 +13,22 @@ public class TheHistoryArray implements TheHistory {
     public void add(String text) {
         String[] stringArray = text.split("\\s");
         wordsArray = Arrays.copyOf(stringArray, stringArray.length);
-//        System.out.println(Arrays.toString(wordsArray));
     }
 
     @Override
     public void removeWord(String wordToBeRemoved) {
-        String[] temporaryArray = new String[0];
+        String[] resultArray = new String[0];
+        int startIndex = 0;
         for (int i = 0; i < wordsArray.length; i++) {
             if (wordsArray[i].equals(wordToBeRemoved)) {
-                ;
-            } else {
-                temporaryArray = Arrays.copyOf(temporaryArray, temporaryArray.length + 1);
-                temporaryArray[temporaryArray.length - 1] = wordsArray[i];
+                String[] temporaryArray = Arrays.copyOfRange(wordsArray, startIndex, i);
+                int previousLength = resultArray.length;
+                resultArray = Arrays.copyOf(resultArray, (previousLength + temporaryArray.length));
+                System.arraycopy(temporaryArray, 0, resultArray, previousLength, temporaryArray.length);
+                startIndex = i + 1;
             }
         }
-//        System.out.println(Arrays.toString(temporaryArray));
+        wordsArray = resultArray;
     }
 
     @Override

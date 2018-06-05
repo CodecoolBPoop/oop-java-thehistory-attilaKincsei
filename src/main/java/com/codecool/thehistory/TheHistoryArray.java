@@ -11,23 +11,33 @@ public class TheHistoryArray implements TheHistory {
 
     @Override
     public void add(String text) {
-        //TODO: check the TheHistory interface for more information
+        String[] stringArray = text.split("\\s");
+        wordsArray = Arrays.copyOf(stringArray, stringArray.length);
+//        System.out.println(Arrays.toString(wordsArray));
     }
 
     @Override
     public void removeWord(String wordToBeRemoved) {
-        //TODO: check the TheHistory interface for more information
+        String[] temporaryArray = new String[0];
+        for (int i = 0; i < wordsArray.length; i++) {
+            if (wordsArray[i].equals(wordToBeRemoved)) {
+                ;
+            } else {
+                temporaryArray = Arrays.copyOf(temporaryArray, temporaryArray.length + 1);
+                temporaryArray[temporaryArray.length - 1] = wordsArray[i];
+            }
+        }
+//        System.out.println(Arrays.toString(temporaryArray));
     }
 
     @Override
     public int size() {
-        //TODO: check the TheHistory interface for more information
-        return 0;
+        return wordsArray.length;
     }
 
     @Override
     public void clear() {
-        //TODO: check the TheHistory interface for more information
+        wordsArray = new String[0];
     }
 
     @Override

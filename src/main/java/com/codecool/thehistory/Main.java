@@ -1,10 +1,17 @@
 package com.codecool.thehistory;
 
-import com.codecool.thehistory.*;
+import java.util.Arrays;
 
 public class Main {
+//    public void makeTheHistoryInstance(TheHistory theHistory) {
+//        theHistory.add();
+//    }
+
     public static void main(String[] args) {
-        TxtReader myIliad = new TxtReader("Iliad.txt");
-        System.out.println(myIliad.getTextFromFile());
+        String testString = "one two three four one five one six seven one eight";
+        TheHistoryArray myTheHistoryArray = new TheHistoryArray();
+        myTheHistoryArray.add(testString);
+        myTheHistoryArray.removeWord("one");
+        myTheHistoryArray.clear();
     }
 }

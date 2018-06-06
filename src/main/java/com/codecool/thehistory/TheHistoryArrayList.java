@@ -1,9 +1,7 @@
 package com.codecool.thehistory;
 
-import java.util.ArrayList;
+import java.util.*;
 import java.util.Collections;
-import java.util.List;
-import java.util.ListIterator;
 
 public class TheHistoryArrayList implements TheHistory {
     /**
@@ -13,28 +11,37 @@ public class TheHistoryArrayList implements TheHistory {
 
     @Override
     public void add(String text) {
-        //TODO: check the TheHistory interface for more information
+        String[] stringArray = text.split("\\s");
+        for (String word : stringArray) {
+            wordsArrayList.add(word);
+        }
     }
 
     @Override
     public void removeWord(String wordToBeRemoved) {
-        //TODO: check the TheHistory interface for more information
+        ArrayList<String> word2BRemovedAL = new ArrayList<>();
+        word2BRemovedAL.add(wordToBeRemoved);
+        wordsArrayList.removeAll(word2BRemovedAL);
     }
 
     @Override
     public int size() {
-        //TODO: check the TheHistory interface for more information
-        return 0;
+        return wordsArrayList.size();
     }
 
     @Override
     public void clear() {
-        //TODO: check the TheHistory interface for more information
+        wordsArrayList.clear();
     }
 
     @Override
     public void replaceOneWord(String from, String to) {
-        //TODO: check the TheHistory interface for more information
+        //TODO: DO THIS WITH ITERATORS!!!!!!!!!!!
+        for (int i = 0; i < wordsArrayList.size(); i++) {
+            if (wordsArrayList.get(i).equals(from)) {
+                wordsArrayList.set(i, to);
+            }
+        }
     }
 
     @Override

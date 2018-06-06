@@ -1,6 +1,7 @@
 package com.codecool.thehistory;
 
 import java.lang.Math;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -38,16 +39,16 @@ public class Main {
         String fromExp = "me replace me";
         String toExp = "AWE SUPER HAPPY FUN";
 
-        TheHistoryArray myTheHistoryArray = new TheHistoryArray();
-        Main newMain = new Main(6, 10);
-        myTheHistoryArray.add(newMain.sourceText);
-        myTheHistoryArray.replace(fromExp, toExp);
-        myTheHistoryArray.clear();
+//        TheHistoryArray myTheHistoryArray = new TheHistoryArray();
+//        Main newMain = new Main(6, 10);
+//        myTheHistoryArray.add(newMain.sourceText);
+//        myTheHistoryArray.replace(fromExp, toExp);
+//        myTheHistoryArray.clear();
 
-        newMain.add();
-        System.out.println(newMain.result);
-        System.out.println(newMain.squareAdd());
-        System.out.println(myChar);
-
+        TheHistoryArrayList testArrayListObject = new TheHistoryArrayList();
+        testArrayListObject.add(testString);
+        testArrayListObject.removeWord("one");
+        System.out.println(testArrayListObject.size());
+        testArrayListObject.clear();
     }
 }

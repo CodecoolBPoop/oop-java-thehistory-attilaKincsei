@@ -1,17 +1,53 @@
 package com.codecool.thehistory;
 
-import java.util.Arrays;
+import java.lang.Math;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Main {
-//    public void makeTheHistoryInstance(TheHistory theHistory) {
-//        theHistory.add();
-//    }
+    String sourceText = "replace replace me replace me me me replace me me";
+    int myInt;
+    int myInt2;
+    int result;
+    boolean myBoolean;
+    private static char myChar = 'c';
+    String myString;
+    int[] myIntegerArray;
+
+    private Main(int myInt, int myInt2) {
+        this.myInt = myInt;
+        this.myInt2 = myInt2;
+    }
+
+    private void square() {
+        result *= result;
+    }
+
+    private void add() {
+        this.result = myInt + myInt2;
+    }
+
+    private int squareAdd() {
+        this.add();
+        this.square();
+        return this.result;
+    }
 
     public static void main(String[] args) {
         String testString = "zero one two three four one five one six seven one eight";
+        String fromExp = "me replace me";
+        String toExp = "AWE SUPER HAPPY FUN";
+
         TheHistoryArray myTheHistoryArray = new TheHistoryArray();
-        myTheHistoryArray.add(testString);
-        myTheHistoryArray.removeWord("one");
+        Main newMain = new Main(6, 10);
+        myTheHistoryArray.add(newMain.sourceText);
+        myTheHistoryArray.replace(fromExp, toExp);
         myTheHistoryArray.clear();
+
+        newMain.add();
+        System.out.println(newMain.result);
+        System.out.println(newMain.squareAdd());
+        System.out.println(myChar);
+
     }
 }

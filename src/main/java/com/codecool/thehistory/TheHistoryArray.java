@@ -1,6 +1,7 @@
 package com.codecool.thehistory;
 
 import java.util.Arrays;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class TheHistoryArray implements TheHistory {
 
@@ -43,12 +44,74 @@ public class TheHistoryArray implements TheHistory {
 
     @Override
     public void replaceOneWord(String from, String to) {
-        //TODO: check the TheHistory interface for more information
+        for (int i = 0; i < wordsArray.length; i++) {
+            if (wordsArray[i].equals(from)) {
+                wordsArray[i] = to;
+            }
+        }
     }
 
     @Override
     public void replaceMoreWords(String[] fromWords, String[] toWords) {
         //TODO: check the TheHistory interface for more information
+        // Checking if fromWords sequence exists in source text
+        int randomNumber = (fromWords.length > 2) ? ThreadLocalRandom.current().nextInt(1, fromWords.length - 1) : 0;
+        int lastIndexToCheck;
+        boolean firstElementEquals;
+        boolean lastElementEquals;
+        boolean randomElementEquals;
+
+        String[] newWordsArray = new String[0];
+        int unchangedSlicesStartIndex = 0;
+
+        if (fromWords.length == toWords.length) {
+            for (int i = 0; i < wordsArray.length; i++) {
+                try {
+                    lastIndexToCheck = i + fromWords.length - 1;
+                    firstElementEquals = wordsArray[i].equals(fromWords[0]);
+                    lastElementEquals = wordsArray[lastIndexToCheck].equals(fromWords[fromWords.length - 1]);
+                    randomElementEquals = wordsArray[i + randomNumber].equals(fromWords[randomNumber]);
+
+                    if (firstElementEquals && lastElementEquals && randomElementEquals) {
+                        for (int j = 0; j < fromWords.length; j++) {
+                            wordsArray[i + j] = toWords[j];
+                        }
+                    }
+                } catch (ArrayIndexOutOfBoundsException AIOOBE) {
+                    continue;
+                }
+            }
+        } else {
+            String[] leftOverArray = new String[0];
+            for (int i = 0; i < wordsArray.length; i++) {
+                try {
+                    lastIndexToCheck = i + fromWords.length - 1;
+                    firstElementEquals = wordsArray[i].equals(fromWords[0]);
+                    lastElementEquals = wordsArray[lastIndexToCheck].equals(fromWords[fromWords.length - 1]);
+                    randomElementEquals = wordsArray[i + randomNumber].equals(fromWords[randomNumber]);
+
+                    if (firstElementEquals && lastElementEquals && randomElementEquals) {
+                        String[] unchangedSlice = Arrays.copyOfRange(wordsArray, unchangedSlicesStartIndex, i);
+                        int newWordsArraysPreviousLength = newWordsArray.length;
+                        int newWordsArraysNewLength = newWordsArraysPreviousLength + unchangedSlice.length + toWords.length;
+                        newWordsArray = Arrays.copyOf(newWordsArray, newWordsArraysNewLength);
+                        System.arraycopy(unchangedSlice, 0, newWordsArray, newWordsArraysPreviousLength, unchangedSlice.length);
+                        System.arraycopy(toWords, 0, newWordsArray, (newWordsArraysPreviousLength + unchangedSlice.length), toWords.length);
+                        unchangedSlicesStartIndex = i + fromWords.length;
+                        leftOverArray = Arrays.copyOfRange(wordsArray, unchangedSlicesStartIndex, wordsArray.length);
+                        i += (fromWords.length - 1);
+                    }
+                } catch (ArrayIndexOutOfBoundsException AIOOBE) {
+                    continue;
+                }
+            }
+            if (leftOverArray.length > 0) {
+                int oldLength = newWordsArray.length;
+                newWordsArray = Arrays.copyOf(newWordsArray, (newWordsArray.length + leftOverArray.length));
+                System.arraycopy(leftOverArray, 0, newWordsArray, oldLength, leftOverArray.length);
+            }
+            wordsArray = newWordsArray;
+        }
     }
 
     @Override

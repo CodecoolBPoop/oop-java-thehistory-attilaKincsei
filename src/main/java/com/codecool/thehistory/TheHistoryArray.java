@@ -1,6 +1,8 @@
 package com.codecool.thehistory;
 
+import java.lang.Math;
 import java.util.Arrays;
+import java.util.InputMismatchException;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class TheHistoryArray implements TheHistory {
@@ -22,10 +24,11 @@ public class TheHistoryArray implements TheHistory {
         int startIndex = 0;
         for (int i = 0; i < wordsArray.length; i++) {
             if (wordsArray[i].equals(wordToBeRemoved)) {
-                String[] temporaryArray = Arrays.copyOfRange(wordsArray, startIndex, i);
                 int previousLength = resultArray.length;
-                resultArray = Arrays.copyOf(resultArray, (previousLength + temporaryArray.length));
-                System.arraycopy(temporaryArray, 0, resultArray, previousLength, temporaryArray.length);
+                String[] increaseLengthArray = new String[previousLength + i - startIndex];
+                System.arraycopy(resultArray, 0, increaseLengthArray, 0, resultArray.length);
+                resultArray = increaseLengthArray;
+                System.arraycopy(wordsArray, startIndex, resultArray, previousLength, (i - startIndex));
                 startIndex = i + 1;
             }
         }
@@ -51,58 +54,62 @@ public class TheHistoryArray implements TheHistory {
         }
     }
 
+    private boolean sequenceExists(String[] sequence, int index) {
+        /**
+         * Searches for an array of strings in another array
+         * @param baseArray: an array to be examinded;
+         * @param sequence: an Array of strings to be searched for in baseArray
+         * @return: true if all 3 elements of sampleArray match the sequence in the baseTextArray
+         * */
+        int lastIndexToCheck = index + sequence.length - 1;
+        if(lastIndexToCheck >= wordsArray.length) {
+            return false;
+        }
+        int randomNumber = (sequence.length > 2) ? ThreadLocalRandom.current().nextInt(1, sequence.length - 1) : 0;
+        boolean firstElementEquals = wordsArray[index].equals(sequence[0]);
+        boolean lastElementEquals = wordsArray[lastIndexToCheck].equals(sequence[sequence.length - 1]);
+        boolean randomElementEquals = wordsArray[index + randomNumber].equals(sequence[randomNumber]);
+        return firstElementEquals && lastElementEquals && randomElementEquals;
+    }
+
     @Override
     public void replaceMoreWords(String[] fromWords, String[] toWords) {
-        //TODO: check the TheHistory interface for more information
-        // Checking if fromWords sequence exists in source text
-        int randomNumber = (fromWords.length > 2) ? ThreadLocalRandom.current().nextInt(1, fromWords.length - 1) : 0;
-        int lastIndexToCheck;
-        boolean firstElementEquals;
-        boolean lastElementEquals;
-        boolean randomElementEquals;
-
         String[] newWordsArray = new String[0];
         int unchangedSlicesStartIndex = 0;
 
         if (fromWords.length == toWords.length) {
             for (int i = 0; i < wordsArray.length; i++) {
-                try {
-                    lastIndexToCheck = i + fromWords.length - 1;
-                    firstElementEquals = wordsArray[i].equals(fromWords[0]);
-                    lastElementEquals = wordsArray[lastIndexToCheck].equals(fromWords[fromWords.length - 1]);
-                    randomElementEquals = wordsArray[i + randomNumber].equals(fromWords[randomNumber]);
-
-                    if (firstElementEquals && lastElementEquals && randomElementEquals) {
-                        for (int j = 0; j < fromWords.length; j++) {
-                            wordsArray[i + j] = toWords[j];
-                        }
+                boolean isMatch = sequenceExists(fromWords, i);
+                if (isMatch) {
+                    for (int j = 0; j < fromWords.length; j++) {
+                        wordsArray[i + j] = toWords[j];
                     }
-                } catch (ArrayIndexOutOfBoundsException AIOOBE) {
-                    continue;
                 }
             }
         } else {
             String[] leftOverArray = new String[0];
             for (int i = 0; i < wordsArray.length; i++) {
-                try {
-                    lastIndexToCheck = i + fromWords.length - 1;
-                    firstElementEquals = wordsArray[i].equals(fromWords[0]);
-                    lastElementEquals = wordsArray[lastIndexToCheck].equals(fromWords[fromWords.length - 1]);
-                    randomElementEquals = wordsArray[i + randomNumber].equals(fromWords[randomNumber]);
+                boolean isMatch = sequenceExists(fromWords, i);
 
-                    if (firstElementEquals && lastElementEquals && randomElementEquals) {
-                        String[] unchangedSlice = Arrays.copyOfRange(wordsArray, unchangedSlicesStartIndex, i);
-                        int newWordsArraysPreviousLength = newWordsArray.length;
-                        int newWordsArraysNewLength = newWordsArraysPreviousLength + unchangedSlice.length + toWords.length;
-                        newWordsArray = Arrays.copyOf(newWordsArray, newWordsArraysNewLength);
-                        System.arraycopy(unchangedSlice, 0, newWordsArray, newWordsArraysPreviousLength, unchangedSlice.length);
-                        System.arraycopy(toWords, 0, newWordsArray, (newWordsArraysPreviousLength + unchangedSlice.length), toWords.length);
-                        unchangedSlicesStartIndex = i + fromWords.length;
-                        leftOverArray = Arrays.copyOfRange(wordsArray, unchangedSlicesStartIndex, wordsArray.length);
-                        i += (fromWords.length - 1);
-                    }
-                } catch (ArrayIndexOutOfBoundsException AIOOBE) {
-                    continue;
+                if (isMatch) {
+                    // unchangedSlice: Creating the last unchanged slice since the last replacement
+                    int unchangedSliceLength = i - unchangedSlicesStartIndex;
+                    String[] unchangedSlice = new String[unchangedSliceLength];
+                    System.arraycopy(wordsArray, unchangedSlicesStartIndex, unchangedSlice, 0, unchangedSliceLength);
+                    // Expanding newWordsArray length with unchanged slice length and toWords length
+                    int newWordsArraysPreviousLength = newWordsArray.length;
+                    int newWordsArraysNewLength = newWordsArraysPreviousLength + unchangedSlice.length + toWords.length;
+                    String[] temporaryArray = new String[newWordsArraysNewLength];
+                    System.arraycopy(newWordsArray, 0, temporaryArray, 0, newWordsArraysPreviousLength);
+                    newWordsArray = temporaryArray;
+                    // Adding unchanged elements and toWords
+                    System.arraycopy(unchangedSlice, 0, newWordsArray, newWordsArraysPreviousLength, unchangedSlice.length);
+                    System.arraycopy(toWords, 0, newWordsArray, (newWordsArraysPreviousLength + unchangedSlice.length), toWords.length);
+                    unchangedSlicesStartIndex = i + fromWords.length;
+                    i += (fromWords.length - 1);
+                }
+                if (i == wordsArray.length - 1) {
+                    leftOverArray = Arrays.copyOfRange(wordsArray, unchangedSlicesStartIndex, wordsArray.length);
                 }
             }
             if (leftOverArray.length > 0) {

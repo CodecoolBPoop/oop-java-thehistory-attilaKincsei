@@ -2,6 +2,7 @@ package com.codecool.thehistory;
 
 import java.util.*;
 import java.util.Collections;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class TheHistoryArrayList implements TheHistory {
     /**
@@ -36,7 +37,6 @@ public class TheHistoryArrayList implements TheHistory {
 
     @Override
     public void replaceOneWord(String from, String to) {
-        //TODO: DO THIS WITH ITERATORS!!!!!!!!!!!
         for (int i = 0; i < wordsArrayList.size(); i++) {
             if (wordsArrayList.get(i).equals(from)) {
                 wordsArrayList.set(i, to);
@@ -44,9 +44,39 @@ public class TheHistoryArrayList implements TheHistory {
         }
     }
 
+    private boolean aListSequenceExists(String[] sequence, int index) {
+        /**
+         * Searches for an array of strings in another array
+         * @param baseArray: an array to be examinded;
+         * @param sequence: an Array of strings to be searched for in baseArray
+         * @return: true if all 3 elements of sampleArray match the sequence in the baseTextArray
+         * */
+        int lastIndexToCheck = index + sequence.length - 1;
+        if(lastIndexToCheck >= wordsArrayList.size()) {
+            return false;
+        }
+        int randomNumber = (sequence.length > 2) ? ThreadLocalRandom.current().nextInt(1, sequence.length - 1) : 0;
+        boolean firstElementEquals = wordsArrayList.get(index).equals(sequence[0]);
+        boolean lastElementEquals = wordsArrayList.get(lastIndexToCheck).equals(sequence[sequence.length - 1]);
+        boolean randomElementEquals = wordsArrayList.get(index + randomNumber).equals(sequence[randomNumber]);
+        return firstElementEquals && lastElementEquals && randomElementEquals;
+    }
+
     @Override
     public void replaceMoreWords(String[] fromWords, String[] toWords) {
         //TODO: check the TheHistory interface for more information
+        List<String> toWordsList = new ArrayList<>();
+        Collections.addAll(toWordsList, toWords);
+        for (int i = 0; i < wordsArrayList.size(); i++) {
+            boolean isMatch = aListSequenceExists(fromWords, i);
+            if (isMatch) {
+                for (int j = 0; j < fromWords.length; j++) {
+                    wordsArrayList.remove(i);
+                }
+                wordsArrayList.addAll(i, toWordsList);
+                i += toWords.length - 1;
+            }
+        }
     }
 
     @Override

@@ -66,10 +66,9 @@ public class TheHistoryArray implements TheHistory {
             return false;
         }
         int randomNumber = (sequence.length > 2) ? ThreadLocalRandom.current().nextInt(1, sequence.length - 1) : 0;
-        boolean firstElementEquals = wordsArray[index].equals(sequence[0]);
         boolean lastElementEquals = wordsArray[lastIndexToCheck].equals(sequence[sequence.length - 1]);
         boolean randomElementEquals = wordsArray[index + randomNumber].equals(sequence[randomNumber]);
-        return firstElementEquals && lastElementEquals && randomElementEquals;
+        return lastElementEquals && randomElementEquals;
     }
 
     @Override
@@ -79,7 +78,11 @@ public class TheHistoryArray implements TheHistory {
 
         if (fromWords.length == toWords.length) {
             for (int i = 0; i < wordsArray.length; i++) {
-                boolean isMatch = sequenceExists(fromWords, i);
+                boolean isMatch = false;
+                if (wordsArray[i].equals(fromWords[0])) {
+                    isMatch = sequenceExists(fromWords, i);
+                }
+
                 if (isMatch) {
                     for (int j = 0; j < fromWords.length; j++) {
                         wordsArray[i + j] = toWords[j];
@@ -89,7 +92,11 @@ public class TheHistoryArray implements TheHistory {
         } else {
             String[] leftOverArray = new String[0];
             for (int i = 0; i < wordsArray.length; i++) {
-                boolean isMatch = sequenceExists(fromWords, i);
+
+                boolean isMatch = false;
+                if (wordsArray[i].equals(fromWords[0])) {
+                    isMatch = sequenceExists(fromWords, i);
+                }
 
                 if (isMatch) {
                     // unchangedSlice: Creating the last unchanged slice since the last replacement

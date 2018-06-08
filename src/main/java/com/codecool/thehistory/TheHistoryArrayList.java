@@ -56,10 +56,10 @@ public class TheHistoryArrayList implements TheHistory {
             return false;
         }
         int randomNumber = (sequence.length > 2) ? ThreadLocalRandom.current().nextInt(1, sequence.length - 1) : 0;
-        boolean firstElementEquals = wordsArrayList.get(index).equals(sequence[0]);
+
         boolean lastElementEquals = wordsArrayList.get(lastIndexToCheck).equals(sequence[sequence.length - 1]);
         boolean randomElementEquals = wordsArrayList.get(index + randomNumber).equals(sequence[randomNumber]);
-        return firstElementEquals && lastElementEquals && randomElementEquals;
+        return lastElementEquals && randomElementEquals;
     }
 
     @Override
@@ -68,7 +68,10 @@ public class TheHistoryArrayList implements TheHistory {
         List<String> toWordsList = new ArrayList<>();
         Collections.addAll(toWordsList, toWords);
         for (int i = 0; i < wordsArrayList.size(); i++) {
-            boolean isMatch = aListSequenceExists(fromWords, i);
+            boolean isMatch = false;
+            if (wordsArrayList.get(i).equals(fromWords[0])) {
+                isMatch = aListSequenceExists(fromWords, i);
+            }
             if (isMatch) {
                 for (int j = 0; j < fromWords.length; j++) {
                     wordsArrayList.remove(i);

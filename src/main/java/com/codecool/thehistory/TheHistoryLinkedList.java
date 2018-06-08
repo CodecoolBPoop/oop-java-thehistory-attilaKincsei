@@ -12,7 +12,7 @@ public class TheHistoryLinkedList implements TheHistory {
 
     @Override
     public void add(String text) {
-        String[] stringList = text.split("\\s");
+        String[] stringList = text.split("\\s+");
         for (String word : stringList) {
             wordsLinkedList.add(word);
         }
@@ -71,6 +71,7 @@ public class TheHistoryLinkedList implements TheHistory {
     @Override
     public void replaceMoreWords(String[] fromWords, String[] toWords) {
         //TODO: check the TheHistory interface for more information
+        List<Integer> insertionIndexList = new LinkedList<Integer>();
         if (fromWords.length == toWords.length) {
             int forIndex = 0;
             for (String textWord : wordsLinkedList) {
@@ -80,33 +81,34 @@ public class TheHistoryLinkedList implements TheHistory {
                     for (ListIterator<String> subIter = subList.listIterator(); subIter.hasNext();) {
                         subIter.next();
                         subIter.set(toWords[subIter.previousIndex()]);
-
                     }
                 }
-                forIndex++;
+                forIndex += fromWords.length - 1;
             }
         } else if (fromWords.length < toWords.length) {
+            List<String> remainderToWords = new ArrayList<String>(Arrays.asList(toWords));
+            for (int i = 0; i < fromWords.length; i++) {
+                remainderToWords.remove(0);
+            }
             int forIndex2 = 0;
             for (String textWord : wordsLinkedList) {
                 boolean isMatch = lListSequenceExists(fromWords, forIndex2, textWord);
                 if (isMatch) {
-                    List<String> toArrayList = new ArrayList<String>(Arrays.asList(toWords));
                     List<String> subList = wordsLinkedList.subList(forIndex2, (forIndex2 + fromWords.length));
                     for (ListIterator<String> subIter = subList.listIterator(); subIter.hasNext();) {
                         subIter.next();
                         subIter.set(toWords[subIter.previousIndex()]);
-                        toArrayList.remove(0);
                     }
-                    wordsLinkedList.addAll((forIndex2 + fromWords.length - 1), toArrayList);
-//                    forIndex2++;
+                    forIndex2 += fromWords.length - 1;
+                    insertionIndexList.add(forIndex2);
                 }
-                forIndex2++;
             }
-
-        }
-
-        if (wordsLinkedList.size() < 20) {
-            System.out.println(wordsLinkedList);
+            for (int insertionIndex: insertionIndexList) {
+                wordsLinkedList.addAll(insertionIndex, remainderToWords);
+            }
+            if (wordsLinkedList.size() < 20) {
+                System.out.println(wordsLinkedList);
+            }
         }
     }
 

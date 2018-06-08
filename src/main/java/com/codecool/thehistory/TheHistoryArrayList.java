@@ -12,7 +12,7 @@ public class TheHistoryArrayList implements TheHistory {
 
     @Override
     public void add(String text) {
-        String[] stringArray = text.split("\\s");
+        String[] stringArray = text.split("\\s+");
         for (String word : stringArray) {
             wordsArrayList.add(word);
         }
@@ -37,6 +37,7 @@ public class TheHistoryArrayList implements TheHistory {
 
     @Override
     public void replaceOneWord(String from, String to) {
+
         for (int i = 0; i < wordsArrayList.size(); i++) {
             if (wordsArrayList.get(i).equals(from)) {
                 wordsArrayList.set(i, to);
@@ -56,7 +57,6 @@ public class TheHistoryArrayList implements TheHistory {
             return false;
         }
         int randomNumber = (sequence.length > 2) ? ThreadLocalRandom.current().nextInt(1, sequence.length - 1) : 0;
-
         boolean lastElementEquals = wordsArrayList.get(lastIndexToCheck).equals(sequence[sequence.length - 1]);
         boolean randomElementEquals = wordsArrayList.get(index + randomNumber).equals(sequence[randomNumber]);
         return lastElementEquals && randomElementEquals;

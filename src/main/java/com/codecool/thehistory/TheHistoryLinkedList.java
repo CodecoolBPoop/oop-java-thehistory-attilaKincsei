@@ -57,14 +57,12 @@ public class TheHistoryLinkedList implements TheHistory {
         if(lastIndexToCheck >= wordsLinkedList.size() || !firstElementEquals) {
             return false;
         }
-        int randomNumber = (sequence.length > 2) ? ThreadLocalRandom.current().nextInt(1, sequence.length - 1) : 0;
-        // TODO: put the whole thing in the main function
         List<String> wSubList = wordsLinkedList.subList(index, lastIndexToCheck + 1);
-        ListIterator<String> wSLast = wSubList.listIterator(sequence.length - 1);
-        boolean lastElementEquals = wSLast.next().equals(sequence[sequence.length - 1]);
-        ListIterator<String> wSLRandom = wSubList.listIterator(randomNumber);
-        boolean randomElementEquals = wSLRandom.next().equals(sequence[randomNumber]);
-        return lastElementEquals && randomElementEquals;
+        boolean lastElementEquals = wSubList.get(sequence.length - 1).equals(sequence[sequence.length - 1]);
+//        int randomNumber = (sequence.length > 2) ? ThreadLocalRandom.current().nextInt(1, sequence.length - 1) : 0;
+//        ListIterator<String> wSLRandom = wSubList.listIterator(randomNumber);
+//        boolean randomElementEquals = wSLRandom.next().equals(sequence[randomNumber]);
+        return lastElementEquals;
     }
 
 
@@ -72,43 +70,44 @@ public class TheHistoryLinkedList implements TheHistory {
     public void replaceMoreWords(String[] fromWords, String[] toWords) {
         //TODO: check the TheHistory interface for more information
         List<Integer> insertionIndexList = new LinkedList<Integer>();
-        if (fromWords.length == toWords.length) {
-            int forIndex = 0;
-            for (String textWord : wordsLinkedList) {
-                boolean isMatch = lListSequenceExists(fromWords, forIndex, textWord);
+        if (fromWords.length <= toWords.length) {
+            insertionIndexList.clear();
+            for (ListIterator<String> wordIterator = wordsLinkedList.listIterator(); wordIterator.hasNext();) {
+                String eachElement = wordIterator.next();
+                int currentIndex = wordIterator.previousIndex();
+                boolean isMatch = lListSequenceExists(fromWords, currentIndex, eachElement);
                 if (isMatch) {
-                    List<String> subList = wordsLinkedList.subList(forIndex, (forIndex + toWords.length));
+                    List<String> subList = wordsLinkedList.subList(currentIndex, (currentIndex + fromWords.length));
                     for (ListIterator<String> subIter = subList.listIterator(); subIter.hasNext();) {
                         subIter.next();
                         subIter.set(toWords[subIter.previousIndex()]);
                     }
-                }
-                forIndex += fromWords.length - 1;
-            }
-        } else if (fromWords.length < toWords.length) {
-            List<String> remainderToWords = new ArrayList<String>(Arrays.asList(toWords));
-            for (int i = 0; i < fromWords.length; i++) {
-                remainderToWords.remove(0);
-            }
-            int forIndex2 = 0;
-            for (String textWord : wordsLinkedList) {
-                boolean isMatch = lListSequenceExists(fromWords, forIndex2, textWord);
-                if (isMatch) {
-                    List<String> subList = wordsLinkedList.subList(forIndex2, (forIndex2 + fromWords.length));
-                    for (ListIterator<String> subIter = subList.listIterator(); subIter.hasNext();) {
-                        subIter.next();
-                        subIter.set(toWords[subIter.previousIndex()]);
-                    }
-                    forIndex2 += fromWords.length - 1;
-                    insertionIndexList.add(forIndex2);
+                    insertionIndexList.add(wordIterator.nextIndex());
                 }
             }
-            for (int insertionIndex: insertionIndexList) {
-                wordsLinkedList.addAll(insertionIndex, remainderToWords);
+        }
+        if (fromWords.length < toWords.length) {
+            List<String> toWordsToInsert = new ArrayList<String>();
+            for (int i = fromWords.length; i < toWords.length; i++) {
+                toWordsToInsert.add(toWords[i]);
             }
-            if (wordsLinkedList.size() < 20) {
-                System.out.println(wordsLinkedList);
+            for (int j = 0; j < insertionIndexList.size(); j++) {
+                int indexToInsert = insertionIndexList.get(j);
+                wordsLinkedList.addAll(indexToInsert, toWordsToInsert);
+                int k = j;
+                while (k + 1 < insertionIndexList.size()) {
+                    k++;
+                    int element = insertionIndexList.get(k);
+                    element += toWordsToInsert.size();
+                    insertionIndexList.set(k, element);
+
+                }
             }
+        } else {
+            insertionIndexList.clear();
+        }
+        if (wordsLinkedList.size() < 20) {
+            System.out.println(wordsLinkedList);
         }
     }
 

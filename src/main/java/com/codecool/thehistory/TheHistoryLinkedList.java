@@ -68,45 +68,33 @@ public class TheHistoryLinkedList implements TheHistory {
 
     @Override
     public void replaceMoreWords(String[] fromWords, String[] toWords) {
-        //TODO: check the TheHistory interface for more information
-        List<Integer> insertionIndexList = new LinkedList<Integer>();
-        if (fromWords.length <= toWords.length) {
-            insertionIndexList.clear();
-            for (ListIterator<String> wordIterator = wordsLinkedList.listIterator(); wordIterator.hasNext();) {
-                String eachElement = wordIterator.next();
-                int currentIndex = wordIterator.previousIndex();
-                boolean isMatch = lListSequenceExists(fromWords, currentIndex, eachElement);
-                if (isMatch) {
-                    List<String> subList = wordsLinkedList.subList(currentIndex, (currentIndex + fromWords.length));
-                    for (ListIterator<String> subIter = subList.listIterator(); subIter.hasNext();) {
-                        subIter.next();
-                        subIter.set(toWords[subIter.previousIndex()]);
+        List<String> resultWordsList = new LinkedList<>();
+        int wordsListIndex = 0;
+        while (wordsListIndex < wordsLinkedList.size()){
+            String ithElement = wordsLinkedList.get(wordsListIndex);
+            if (ithElement.equals(fromWords[0])) {
+                boolean isMatch = true;
+                for (int j = 0; j < fromWords.length; j++) {
+                    if ((wordsListIndex + fromWords.length > wordsLinkedList.size()) || !wordsLinkedList.get(wordsListIndex + j).equals(fromWords[j])) {
+                        resultWordsList.add(ithElement);
+                        isMatch = false;
+                        break;
                     }
-                    insertionIndexList.add(wordIterator.nextIndex());
                 }
+                if (isMatch) {
+                    resultWordsList.addAll(Arrays.asList(toWords));
+                    wordsListIndex += fromWords.length;
+                } else {
+                    wordsListIndex++;
+                }
+            } else {
+                resultWordsList.add(ithElement);
+                wordsListIndex++;
             }
         }
-//        if (fromWords.length < toWords.length) {
-//            List<String> toWordsToInsert = new ArrayList<String>();
-//            for (int i = fromWords.length; i < toWords.length; i++) {
-//                toWordsToInsert.add(toWords[i]);
-//            }
-//            for (int j = 0; j < insertionIndexList.size(); j++) {
-//                int indexToInsert = insertionIndexList.get(j);
-//                wordsLinkedList.addAll(indexToInsert, toWordsToInsert);
-//                int k = j;
-//                while (k + 1 < insertionIndexList.size()) {
-//                    k++;
-//                    int element = insertionIndexList.get(k);
-//                    element += toWordsToInsert.size();
-//                    insertionIndexList.set(k, element);
-//
-//                }
-//            }
-//        } else {
-//            insertionIndexList.clear();
-//        }
-//        if (wordsLinkedList.size() < 20) {
+        wordsLinkedList.clear();
+        wordsLinkedList = resultWordsList;
+//        if (wordsLinkedList.size() < 30) {
 //            System.out.println(wordsLinkedList);
 //        }
     }

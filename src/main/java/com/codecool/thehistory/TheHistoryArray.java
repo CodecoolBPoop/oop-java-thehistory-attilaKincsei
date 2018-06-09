@@ -83,7 +83,7 @@ public class TheHistoryArray implements TheHistory {
         }
 
         int resultArrayIndex = 0;
-        for (int i = 0; i < wordsArray.length; i++) { // might need to go backwards
+        for (int i = 0; i < wordsArray.length; i++) {
             if (wordsArray[i].equals(fromWords[0])) {
                 boolean isMatch = true;
                 for (int j = 0; j < fromWords.length; j++) {

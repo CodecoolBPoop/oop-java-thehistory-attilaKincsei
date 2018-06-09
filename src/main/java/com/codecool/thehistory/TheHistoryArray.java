@@ -75,48 +75,40 @@ public class TheHistoryArray implements TheHistory {
 
     @Override
     public void replaceMoreWords(String[] fromWords, String[] toWords) {
-        String[] resultWordsArray = new String[wordsArray.length];
-        int unchangedSlicesStartIndex = 0;
+        String[] resultWordsArray;
+        if (fromWords.length >= toWords.length) {
+            resultWordsArray = new String[wordsArray.length];
+        } else {
+            resultWordsArray = new String[wordsArray.length * toWords.length];
+        }
 
-        if (fromWords.length == toWords.length) {
-            for (int i = 0; i < wordsArray.length; i++) {
-                boolean isMatch = false;
-                if (wordsArray[i].equals(fromWords[0])) {
-                    isMatch = sequenceExists(fromWords, i);
+        int resultArrayIndex = 0;
+        for (int i = 0; i < wordsArray.length; i++) { // might need to go backwards
+            if (wordsArray[i].equals(fromWords[0])) {
+                boolean isMatch = true;
+                for (int j = 0; j < fromWords.length; j++) {
+                    if ((i + fromWords.length > wordsArray.length) || !wordsArray[i + j].equals(fromWords[j])) {
+                        resultWordsArray[resultArrayIndex] = wordsArray[i];
+                        isMatch = false;
+                        break;
+                    }
                 }
-
                 if (isMatch) {
-                    for (int j = 0; j < fromWords.length; j++) {
-                        wordsArray[i + j] = toWords[j];
-                    }
-                }
-            }
-        } else if (fromWords.length > toWords.length) {
-            int resultArrayIndex = 0;
-            for (int i = 0; i < wordsArray.length; i++) { // might need to go backwards
-                if (wordsArray[i].equals(fromWords[0])) {
-                    boolean isMatch = true;
-                    for (int j = 0; j < fromWords.length; j++) {
-                        if ((i + fromWords.length > wordsArray.length) || !wordsArray[i + j].equals(fromWords[j])) {
-                            resultWordsArray[resultArrayIndex] = wordsArray[i];
-                            isMatch = false;
-                            break;
-                        }
-                    }
-                    if (isMatch) {
-                        for (int k = 0; k < toWords.length; k++) {
-                            resultWordsArray[resultArrayIndex] = toWords[k];
-                            resultArrayIndex++;
-                        }
-                        i += fromWords.length - 1;
-                    } else {
+                    for (int k = 0; k < toWords.length; k++) {
+                        resultWordsArray[resultArrayIndex] = toWords[k];
                         resultArrayIndex++;
                     }
+                    i += fromWords.length - 1;
                 } else {
-                    resultWordsArray[resultArrayIndex] = wordsArray[i];
                     resultArrayIndex++;
                 }
+            } else {
+                resultWordsArray[resultArrayIndex] = wordsArray[i];
+                resultArrayIndex++;
             }
+        }
+        // Removing null values from resultArray only if toWords != fromWords
+        if (fromWords.length != toWords.length) {
             int notNullLength = 0;
             for (String word : resultWordsArray) {
                 if (!(word == null)) {
@@ -131,11 +123,9 @@ public class TheHistoryArray implements TheHistory {
                     tempIndex++;
                 }
             }
-
             wordsArray = tempArray;
-        }
-        if (wordsArray.length < 30) {
-            System.out.println(Arrays.toString(wordsArray));
+        } else {
+            wordsArray = resultWordsArray;
         }
     }
 

@@ -158,7 +158,7 @@ public class TestTheHistory {
 
     public static void main(String[] args) {
         System.out.println("****** Functionality Tests - Array *******");
-        System.out.println("replace replace me replace me me me replace me me");
+//        System.out.println("replace replace me replace me me me replace me me");
         runAllFunctionalityTests(new TheHistoryArray());
         System.out.println("****** Functionality Tests - ArrayList *******");
         runAllFunctionalityTests(new TheHistoryArrayList());
@@ -167,8 +167,8 @@ public class TestTheHistory {
 
         System.out.println("****** Array Tests *******");
         runAllTests(new TheHistoryArray());
-//        System.out.println("****** ArrayList Tests *******");
-//        runAllTests(new TheHistoryArrayList());
+        System.out.println("****** ArrayList Tests *******");
+        runAllTests(new TheHistoryArrayList());
 //        System.out.println("****** LinkedList Tests *******");
 //        runAllTests(new TheHistoryLinkedList());
     }

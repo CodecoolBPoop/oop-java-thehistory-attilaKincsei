@@ -165,8 +165,8 @@ public class TestTheHistory {
         System.out.println("****** Functionality Tests - LinkedList *******");
         runAllFunctionalityTests(new TheHistoryLinkedList());
 
-//        System.out.println("****** Array Tests *******");
-//        runAllTests(new TheHistoryArray());
+        System.out.println("****** Array Tests *******");
+        runAllTests(new TheHistoryArray());
 //        System.out.println("****** ArrayList Tests *******");
 //        runAllTests(new TheHistoryArrayList());
 //        System.out.println("****** LinkedList Tests *******");

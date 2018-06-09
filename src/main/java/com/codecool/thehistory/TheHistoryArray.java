@@ -1,8 +1,10 @@
 package com.codecool.thehistory;
 
 import java.lang.Math;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class TheHistoryArray implements TheHistory {
@@ -73,7 +75,7 @@ public class TheHistoryArray implements TheHistory {
 
     @Override
     public void replaceMoreWords(String[] fromWords, String[] toWords) {
-        String[] resultWordsArray = new String[wordsArray.length * toWords.length];
+        String[] resultWordsArray = new String[wordsArray.length];
         int unchangedSlicesStartIndex = 0;
 
         if (fromWords.length == toWords.length) {
@@ -90,33 +92,51 @@ public class TheHistoryArray implements TheHistory {
                 }
             }
         } else if (fromWords.length > toWords.length) {
-            int lengthDifference = fromWords.length - toWords.length;
-            int differenceTimes = 0;
-            int indexDifference = lengthDifference * differenceTimes;
+            int resultArrayIndex = 0;
             for (int i = 0; i < wordsArray.length; i++) { // might need to go backwards
                 if (wordsArray[i].equals(fromWords[0])) {
                     boolean isMatch = true;
                     for (int j = 0; j < fromWords.length; j++) {
                         if ((i + fromWords.length > wordsArray.length) || !wordsArray[i + j].equals(fromWords[j])) {
-                            resultWordsArray[i - indexDifference] = wordsArray[i];
+                            resultWordsArray[resultArrayIndex] = wordsArray[i];
                             isMatch = false;
                             break;
                         }
                     }
                     if (isMatch) {
                         for (int k = 0; k < toWords.length; k++) {
-                            resultWordsArray[i - indexDifference + k] = toWords[k];
-                            differenceTimes++;
-                            i += lengthDifference;
+                            resultWordsArray[resultArrayIndex] = toWords[k];
+                            resultArrayIndex++;
                         }
+                        i += fromWords.length - 1;
+                    } else {
+                        resultArrayIndex++;
                     }
                 } else {
-                    resultWordsArray[i - indexDifference] = wordsArray[i];
+                    resultWordsArray[resultArrayIndex] = wordsArray[i];
+                    resultArrayIndex++;
                 }
             }
-            wordsArray = resultWordsArray;
+            int notNullLength = 0;
+            for (String word : resultWordsArray) {
+                if (!(word == null)) {
+                    notNullLength++;
+                }
+            }
+            String[] tempArray = new String[notNullLength];
+            int tempIndex = 0;
+            for (String word : resultWordsArray) {
+                if (!(word == null)) {
+                    tempArray[tempIndex] = word;
+                    tempIndex++;
+                }
+            }
+
+            wordsArray = tempArray;
         }
-        System.out.println(Arrays.toString(wordsArray));
+        if (wordsArray.length < 30) {
+            System.out.println(Arrays.toString(wordsArray));
+        }
     }
 
     @Override

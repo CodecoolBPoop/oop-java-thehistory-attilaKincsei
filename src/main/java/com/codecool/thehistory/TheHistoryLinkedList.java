@@ -86,29 +86,29 @@ public class TheHistoryLinkedList implements TheHistory {
                 }
             }
         }
-        if (fromWords.length < toWords.length) {
-            List<String> toWordsToInsert = new ArrayList<String>();
-            for (int i = fromWords.length; i < toWords.length; i++) {
-                toWordsToInsert.add(toWords[i]);
-            }
-            for (int j = 0; j < insertionIndexList.size(); j++) {
-                int indexToInsert = insertionIndexList.get(j);
-                wordsLinkedList.addAll(indexToInsert, toWordsToInsert);
-                int k = j;
-                while (k + 1 < insertionIndexList.size()) {
-                    k++;
-                    int element = insertionIndexList.get(k);
-                    element += toWordsToInsert.size();
-                    insertionIndexList.set(k, element);
-
-                }
-            }
-        } else {
-            insertionIndexList.clear();
-        }
-        if (wordsLinkedList.size() < 20) {
-            System.out.println(wordsLinkedList);
-        }
+//        if (fromWords.length < toWords.length) {
+//            List<String> toWordsToInsert = new ArrayList<String>();
+//            for (int i = fromWords.length; i < toWords.length; i++) {
+//                toWordsToInsert.add(toWords[i]);
+//            }
+//            for (int j = 0; j < insertionIndexList.size(); j++) {
+//                int indexToInsert = insertionIndexList.get(j);
+//                wordsLinkedList.addAll(indexToInsert, toWordsToInsert);
+//                int k = j;
+//                while (k + 1 < insertionIndexList.size()) {
+//                    k++;
+//                    int element = insertionIndexList.get(k);
+//                    element += toWordsToInsert.size();
+//                    insertionIndexList.set(k, element);
+//
+//                }
+//            }
+//        } else {
+//            insertionIndexList.clear();
+//        }
+//        if (wordsLinkedList.size() < 20) {
+//            System.out.println(wordsLinkedList);
+//        }
     }
 
     @Override

@@ -73,7 +73,7 @@ public class TheHistoryArray implements TheHistory {
 
     @Override
     public void replaceMoreWords(String[] fromWords, String[] toWords) {
-        String[] newWordsArray = new String[0];
+        String[] resultWordsArray = new String[wordsArray.length * toWords.length];
         int unchangedSlicesStartIndex = 0;
 
         if (fromWords.length == toWords.length) {
@@ -89,43 +89,34 @@ public class TheHistoryArray implements TheHistory {
                     }
                 }
             }
-        } else {
-            String[] leftOverArray = new String[0];
-            for (int i = 0; i < wordsArray.length; i++) {
-
-                boolean isMatch = false;
+        } else if (fromWords.length > toWords.length) {
+            int lengthDifference = fromWords.length - toWords.length;
+            int differenceTimes = 0;
+            int indexDifference = lengthDifference * differenceTimes;
+            for (int i = 0; i < wordsArray.length; i++) { // might need to go backwards
                 if (wordsArray[i].equals(fromWords[0])) {
-                    isMatch = sequenceExists(fromWords, i);
-                }
-
-                if (isMatch) {
-                    // unchangedSlice: Creating the last unchanged slice since the last replacement
-                    int unchangedSliceLength = i - unchangedSlicesStartIndex;
-                    String[] unchangedSlice = new String[unchangedSliceLength];
-                    System.arraycopy(wordsArray, unchangedSlicesStartIndex, unchangedSlice, 0, unchangedSliceLength);
-                    // Expanding newWordsArray length with unchanged slice length and toWords length
-                    int newWordsArraysPreviousLength = newWordsArray.length;
-                    int newWordsArraysNewLength = newWordsArraysPreviousLength + unchangedSlice.length + toWords.length;
-                    String[] temporaryArray = new String[newWordsArraysNewLength];
-                    System.arraycopy(newWordsArray, 0, temporaryArray, 0, newWordsArraysPreviousLength);
-                    newWordsArray = temporaryArray;
-                    // Adding unchanged elements and toWords
-                    System.arraycopy(unchangedSlice, 0, newWordsArray, newWordsArraysPreviousLength, unchangedSlice.length);
-                    System.arraycopy(toWords, 0, newWordsArray, (newWordsArraysPreviousLength + unchangedSlice.length), toWords.length);
-                    unchangedSlicesStartIndex = i + fromWords.length;
-                    i += (fromWords.length - 1);
-                }
-                if (i == wordsArray.length - 1) {
-                    leftOverArray = Arrays.copyOfRange(wordsArray, unchangedSlicesStartIndex, wordsArray.length);
+                    boolean isMatch = true;
+                    for (int j = 0; j < fromWords.length; j++) {
+                        if ((i + fromWords.length > wordsArray.length) || !wordsArray[i + j].equals(fromWords[j])) {
+                            resultWordsArray[i - indexDifference] = wordsArray[i];
+                            isMatch = false;
+                            break;
+                        }
+                    }
+                    if (isMatch) {
+                        for (int k = 0; k < toWords.length; k++) {
+                            resultWordsArray[i - indexDifference + k] = toWords[k];
+                            differenceTimes++;
+                            i += lengthDifference;
+                        }
+                    }
+                } else {
+                    resultWordsArray[i - indexDifference] = wordsArray[i];
                 }
             }
-            if (leftOverArray.length > 0) {
-                int oldLength = newWordsArray.length;
-                newWordsArray = Arrays.copyOf(newWordsArray, (newWordsArray.length + leftOverArray.length));
-                System.arraycopy(leftOverArray, 0, newWordsArray, oldLength, leftOverArray.length);
-            }
-            wordsArray = newWordsArray;
+            wordsArray = resultWordsArray;
         }
+        System.out.println(Arrays.toString(wordsArray));
     }
 
     @Override

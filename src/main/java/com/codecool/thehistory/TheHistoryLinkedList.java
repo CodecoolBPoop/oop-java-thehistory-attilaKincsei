@@ -48,40 +48,36 @@ public class TheHistoryLinkedList implements TheHistory {
     private void moreWordsEqual(String[] fromWords, String[] toWords) {
         List<String> resultWordsList = new LinkedList<>();
         for (ListIterator<String> i = wordsLinkedList.listIterator(); i.hasNext();) {
-            String ithItem = i.next();
+            String currentItem = i.next();
+            int currentIndex = i.previousIndex();
 
             // Checking current element ANDDDD possibility of index out of bounds exception:
             int largestListIndex = wordsLinkedList.size() - 1;
             int lastItemsIndex = i.previousIndex() + fromWords.length - 1;
-            boolean mightBeTrue = ithItem.equals(fromWords[0]) && lastItemsIndex <= largestListIndex;
+            boolean mightBeTrue = currentItem.equals(fromWords[0]) && lastItemsIndex <= largestListIndex;
             if (mightBeTrue) {
                 boolean nextMatches = true;
-                List<String> missedItemsList = new LinkedList<>();
-//                missedItemsList.clear();
-                missedItemsList.add(ithItem);
 
                 // Checking matches of subsequent elements:
                 for (int j = 1; j < fromWords.length; j++) {
                     String fromWord = i.next();
-                    missedItemsList.add(fromWord);
-
                     if (!(fromWord.equals(fromWords[j]))) {
                         nextMatches = false;
-                        resultWordsList.addAll(missedItemsList);
-                        for (int k = 1; k < j; k++) {
+                        for (int k = 0; k < j; k++) {
                             i.previous();
                         }
                         break;
                     }
                 }
+                // Adding elements to resultArray: if true: toWords. else: only the current element
                 if (nextMatches) {
                     resultWordsList.addAll(Arrays.asList(toWords));
-//                    for (int l = 0; l < fromWords.length - 1; l++) {
-//                        i.next();
-//                    }
+                } else {
+                    resultWordsList.add(currentItem);
                 }
+
             } else {
-                resultWordsList.add(ithItem);
+                resultWordsList.add(currentItem);
             }
         }
         wordsLinkedList = resultWordsList;
@@ -97,16 +93,54 @@ public class TheHistoryLinkedList implements TheHistory {
 
     @Override
     public void replaceMoreWords(String[] fromWords, String[] toWords) {
-        if (fromWords.length == toWords.length) {
-            moreWordsEqual(fromWords, toWords);
-        } else if (toWords.length > fromWords.length) {
+        List<String> resultWordsList = new LinkedList<>();
+        for (ListIterator<String> i = wordsLinkedList.listIterator(); i.hasNext();) {
+            String currentItem = i.next();
+            int currentIndex = i.previousIndex();
+
+            // Checking current element ANDDDD possibility of index out of bounds exception:
+            int largestListIndex = wordsLinkedList.size() - 1;
+            int lastItemsIndex = i.previousIndex() + fromWords.length - 1;
+            boolean mightBeTrue = currentItem.equals(fromWords[0]) && lastItemsIndex <= largestListIndex;
+            if (mightBeTrue) {
+                boolean nextMatches = true;
+
+                // Checking matches of subsequent elements:
+                for (int j = 1; j < fromWords.length; j++) {
+                    String fromWord = i.next();
+                    if (!(fromWord.equals(fromWords[j]))) {
+                        nextMatches = false;
+                        for (int k = 0; k < j; k++) {
+                            i.previous();
+                        }
+                        break;
+                    }
+                }
+                // Adding elements to resultArray: if true: toWords. else: only the current element
+                if (nextMatches) {
+                    resultWordsList.addAll(Arrays.asList(toWords));
+                } else {
+                    resultWordsList.add(currentItem);
+                }
+
+            } else {
+                resultWordsList.add(currentItem);
+            }
+        }
+        wordsLinkedList = resultWordsList;
+
+        //        if (fromWords.length == toWords.length) {
+//            moreWordsEqual(fromWords, toWords);
+//        } else if (toWords.length > fromWords.length) {
+//            moreWordsEqual(fromWords, toWords);
             moreWordsInsert(fromWords, toWords);
-        } else {
-            moreWordsDelete(fromWords, toWords);
-        }
-        if (wordsLinkedList.size() < 30) {
-            System.out.println(wordsLinkedList);
-        }
+//        } else {
+//            moreWordsEqual(fromWords, toWords);
+//            moreWordsDelete(fromWords, toWords);
+//        }
+//        if (wordsLinkedList.size() < 30) {
+//            System.out.println(wordsLinkedList);
+//        }
     }
 
     @Override

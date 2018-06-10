@@ -70,20 +70,27 @@ public class TheHistoryLinkedList implements TheHistory {
     public void replaceMoreWords(String[] fromWords, String[] toWords) {
         List<String> resultWordsList = new LinkedList<>();
         int wordsListIndex = 0;
-        while (wordsListIndex < wordsLinkedList.size()){
-            String ithElement = wordsLinkedList.get(wordsListIndex);
+        for (ListIterator<String> mainIter = wordsLinkedList.listIterator();mainIter.hasNext();) {
+            String ithElement = mainIter.next();
+//            String ithElement = wordsLinkedList.get(wordsListIndex);
             if (ithElement.equals(fromWords[0])) {
                 boolean isMatch = true;
-                for (int j = 0; j < fromWords.length; j++) {
-                    if ((wordsListIndex + fromWords.length > wordsLinkedList.size()) || !wordsLinkedList.get(wordsListIndex + j).equals(fromWords[j])) {
+                for (int j = 1; j < fromWords.length; j++) { // TODO: 3 words added, only stepped over twice
+                    String iPlusJthElement = mainIter.next();
+                    if ((mainIter.previousIndex() + fromWords.length - 1 > wordsLinkedList.size()) || !iPlusJthElement.equals(fromWords[j])) {
                         resultWordsList.add(ithElement);
                         isMatch = false;
+                        mainIter.previous();
                         break;
                     }
+                    mainIter.previous();
                 }
                 if (isMatch) {
                     resultWordsList.addAll(Arrays.asList(toWords));
                     wordsListIndex += fromWords.length;
+                    for (int k = 0; k < fromWords.length - 1; k++) {
+                        mainIter.next();
+                    }
                 } else {
                     wordsListIndex++;
                 }
@@ -92,11 +99,11 @@ public class TheHistoryLinkedList implements TheHistory {
                 wordsListIndex++;
             }
         }
-        wordsLinkedList.clear();
+//        wordsLinkedList.clear();
         wordsLinkedList = resultWordsList;
-//        if (wordsLinkedList.size() < 30) {
-//            System.out.println(wordsLinkedList);
-//        }
+        if (wordsLinkedList.size() < 30) {
+            System.out.println(wordsLinkedList);
+        }
     }
 
     @Override

@@ -157,10 +157,10 @@ public class TestTheHistory {
     }
 
     public static void main(String[] args) {
-        System.out.println("****** Functionality Tests - Array *******");
-        runAllFunctionalityTests(new TheHistoryArray());
-        System.out.println("****** Functionality Tests - ArrayList *******");
-        runAllFunctionalityTests(new TheHistoryArrayList());
+//        System.out.println("****** Functionality Tests - Array *******");
+//        runAllFunctionalityTests(new TheHistoryArray());
+//        System.out.println("****** Functionality Tests - ArrayList *******");
+//        runAllFunctionalityTests(new TheHistoryArrayList());
         System.out.println("****** Functionality Tests - LinkedList *******");
         System.out.println("replace replace me replace me me me replace me me");
         runAllFunctionalityTests(new TheHistoryLinkedList());

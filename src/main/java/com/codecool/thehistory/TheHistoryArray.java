@@ -14,10 +14,11 @@ public class TheHistoryArray implements TheHistory {
      */
     private String[] wordsArray = new String[0];
 
+
+
     @Override
     public void add(String text) {
-        String[] stringArray = text.split("\\s+");
-        wordsArray = Arrays.copyOf(stringArray, stringArray.length);
+        wordsArray = text.split("\\s+");
     }
 
     @Override

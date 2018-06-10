@@ -45,67 +45,19 @@ public class TheHistoryLinkedList implements TheHistory {
         }
     }
 
-    private void moreWordsEqual(String[] fromWords, String[] toWords) {
-        List<String> resultWordsList = new LinkedList<>();
-        for (ListIterator<String> i = wordsLinkedList.listIterator(); i.hasNext();) {
-            String currentItem = i.next();
-            int currentIndex = i.previousIndex();
-
-            // Checking current element ANDDDD possibility of index out of bounds exception:
-            int largestListIndex = wordsLinkedList.size() - 1;
-            int lastItemsIndex = i.previousIndex() + fromWords.length - 1;
-            boolean mightBeTrue = currentItem.equals(fromWords[0]) && lastItemsIndex <= largestListIndex;
-            if (mightBeTrue) {
-                boolean nextMatches = true;
-
-                // Checking matches of subsequent elements:
-                for (int j = 1; j < fromWords.length; j++) {
-                    String fromWord = i.next();
-                    if (!(fromWord.equals(fromWords[j]))) {
-                        nextMatches = false;
-                        for (int k = 0; k < j; k++) {
-                            i.previous();
-                        }
-                        break;
-                    }
-                }
-                // Adding elements to resultArray: if true: toWords. else: only the current element
-                if (nextMatches) {
-                    resultWordsList.addAll(Arrays.asList(toWords));
-                } else {
-                    resultWordsList.add(currentItem);
-                }
-
-            } else {
-                resultWordsList.add(currentItem);
-            }
-        }
-        wordsLinkedList = resultWordsList;
-    }
-
-    private void moreWordsInsert(String[] fromWords, String[] toWords) {
-        ;
-    }
-
-    private void moreWordsDelete(String[] fromWords, String[] toWords) {
-        ;
-    }
-
     @Override
     public void replaceMoreWords(String[] fromWords, String[] toWords) {
         List<String> resultWordsList = new LinkedList<>();
         for (ListIterator<String> i = wordsLinkedList.listIterator(); i.hasNext();) {
             String currentItem = i.next();
-            int currentIndex = i.previousIndex();
 
-            // Checking current element ANDDDD possibility of index out of bounds exception:
+            // Checking current element and preventing index out of bounds exception:
             int largestListIndex = wordsLinkedList.size() - 1;
             int lastItemsIndex = i.previousIndex() + fromWords.length - 1;
             boolean mightBeTrue = currentItem.equals(fromWords[0]) && lastItemsIndex <= largestListIndex;
             if (mightBeTrue) {
-                boolean nextMatches = true;
-
                 // Checking matches of subsequent elements:
+                boolean nextMatches = true;
                 for (int j = 1; j < fromWords.length; j++) {
                     String fromWord = i.next();
                     if (!(fromWord.equals(fromWords[j]))) {
@@ -116,7 +68,7 @@ public class TheHistoryLinkedList implements TheHistory {
                         break;
                     }
                 }
-                // Adding elements to resultArray: if true: toWords. else: only the current element
+                // Adding elements to resultArray: if true: all toWords. else: only the current item
                 if (nextMatches) {
                     resultWordsList.addAll(Arrays.asList(toWords));
                 } else {
@@ -128,19 +80,6 @@ public class TheHistoryLinkedList implements TheHistory {
             }
         }
         wordsLinkedList = resultWordsList;
-
-        //        if (fromWords.length == toWords.length) {
-//            moreWordsEqual(fromWords, toWords);
-//        } else if (toWords.length > fromWords.length) {
-//            moreWordsEqual(fromWords, toWords);
-            moreWordsInsert(fromWords, toWords);
-//        } else {
-//            moreWordsEqual(fromWords, toWords);
-//            moreWordsDelete(fromWords, toWords);
-//        }
-//        if (wordsLinkedList.size() < 30) {
-//            System.out.println(wordsLinkedList);
-//        }
     }
 
     @Override

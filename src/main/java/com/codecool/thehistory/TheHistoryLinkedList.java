@@ -45,62 +45,65 @@ public class TheHistoryLinkedList implements TheHistory {
         }
     }
 
-    private boolean lListSequenceExists(String[] sequence, int index, String firstElement) {
-        /**
-         * Searches for an array of strings in another array
-         * @param baseArray: an array to be examinded;
-         * @param sequence: an Array of strings to be searched for in baseArray
-         * @return: true if all 3 elements of sampleArray match the sequence in the baseTextArray
-         * */
-        int lastIndexToCheck = index + sequence.length - 1;
-        boolean firstElementEquals = firstElement.equals(sequence[0]);
-        if(lastIndexToCheck >= wordsLinkedList.size() || !firstElementEquals) {
-            return false;
+    private void moreWordsEqual(String[] fromWords, String[] toWords) {
+        List<String> resultWordsList = new LinkedList<>();
+        for (ListIterator<String> i = wordsLinkedList.listIterator(); i.hasNext();) {
+            String ithItem = i.next();
+
+            // Checking current element ANDDDD possibility of index out of bounds exception:
+            int largestListIndex = wordsLinkedList.size() - 1;
+            int lastItemsIndex = i.previousIndex() + fromWords.length - 1;
+            boolean mightBeTrue = ithItem.equals(fromWords[0]) && lastItemsIndex <= largestListIndex;
+            if (mightBeTrue) {
+                boolean nextMatches = true;
+                List<String> missedItemsList = new LinkedList<>();
+//                missedItemsList.clear();
+                missedItemsList.add(ithItem);
+
+                // Checking matches of subsequent elements:
+                for (int j = 1; j < fromWords.length; j++) {
+                    String fromWord = i.next();
+                    missedItemsList.add(fromWord);
+
+                    if (!(fromWord.equals(fromWords[j]))) {
+                        nextMatches = false;
+                        resultWordsList.addAll(missedItemsList);
+                        for (int k = 1; k < j; k++) {
+                            i.previous();
+                        }
+                        break;
+                    }
+                }
+                if (nextMatches) {
+                    resultWordsList.addAll(Arrays.asList(toWords));
+//                    for (int l = 0; l < fromWords.length - 1; l++) {
+//                        i.next();
+//                    }
+                }
+            } else {
+                resultWordsList.add(ithItem);
+            }
         }
-        List<String> wSubList = wordsLinkedList.subList(index, lastIndexToCheck + 1);
-        boolean lastElementEquals = wSubList.get(sequence.length - 1).equals(sequence[sequence.length - 1]);
-//        int randomNumber = (sequence.length > 2) ? ThreadLocalRandom.current().nextInt(1, sequence.length - 1) : 0;
-//        ListIterator<String> wSLRandom = wSubList.listIterator(randomNumber);
-//        boolean randomElementEquals = wSLRandom.next().equals(sequence[randomNumber]);
-        return lastElementEquals;
+        wordsLinkedList = resultWordsList;
     }
 
+    private void moreWordsInsert(String[] fromWords, String[] toWords) {
+        ;
+    }
+
+    private void moreWordsDelete(String[] fromWords, String[] toWords) {
+        ;
+    }
 
     @Override
     public void replaceMoreWords(String[] fromWords, String[] toWords) {
-        List<String> resultWordsList = new LinkedList<>();
-        int wordsListIndex = 0;
-        for (ListIterator<String> mainIter = wordsLinkedList.listIterator();mainIter.hasNext();) {
-            String ithElement = mainIter.next();
-//            String ithElement = wordsLinkedList.get(wordsListIndex);
-            if (ithElement.equals(fromWords[0])) {
-                boolean isMatch = true;
-                for (int j = 1; j < fromWords.length; j++) { // TODO: 3 words added, only stepped over twice
-                    String iPlusJthElement = mainIter.next();
-                    if ((mainIter.previousIndex() + fromWords.length - 1 > wordsLinkedList.size()) || !iPlusJthElement.equals(fromWords[j])) {
-                        resultWordsList.add(ithElement);
-                        isMatch = false;
-                        mainIter.previous();
-                        break;
-                    }
-                    mainIter.previous();
-                }
-                if (isMatch) {
-                    resultWordsList.addAll(Arrays.asList(toWords));
-                    wordsListIndex += fromWords.length;
-                    for (int k = 0; k < fromWords.length - 1; k++) {
-                        mainIter.next();
-                    }
-                } else {
-                    wordsListIndex++;
-                }
-            } else {
-                resultWordsList.add(ithElement);
-                wordsListIndex++;
-            }
+        if (fromWords.length == toWords.length) {
+            moreWordsEqual(fromWords, toWords);
+        } else if (toWords.length > fromWords.length) {
+            moreWordsInsert(fromWords, toWords);
+        } else {
+            moreWordsDelete(fromWords, toWords);
         }
-//        wordsLinkedList.clear();
-        wordsLinkedList = resultWordsList;
         if (wordsLinkedList.size() < 30) {
             System.out.println(wordsLinkedList);
         }

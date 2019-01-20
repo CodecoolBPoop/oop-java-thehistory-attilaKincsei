@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.security.*;
 
 public class TheHistoryArray implements TheHistory {
 
@@ -14,10 +15,11 @@ public class TheHistoryArray implements TheHistory {
      */
     private String[] wordsArray = new String[0];
 
+
+
     @Override
     public void add(String text) {
-        String[] stringArray = text.split("\\s+");
-        wordsArray = Arrays.copyOf(stringArray, stringArray.length);
+        wordsArray = text.split("\\s+");
     }
 
     @Override

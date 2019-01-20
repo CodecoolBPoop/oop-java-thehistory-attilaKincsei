@@ -72,6 +72,7 @@ public class NewMain {
 //        }
 
         try {
+
             ListIterator<String> i = list.listIterator();
             System.out.println(list); //
             String element = i.next();
@@ -80,23 +81,21 @@ public class NewMain {
             System.out.println(element); //
             i.next();
             i.next();
-            String lastItered = i.next();
-//        i.previous();
-//        i.previous();
-//        i.previous();
-//        list.pop();
-//        i.remove();
-
-            String polled = list.poll();
-            list.add("laaaast");
-
+//            String lastItered = i.next();
+            i.previous();
+            i.previous();
+            i.previous();
+//            list.pop();
+            i.next();
+//            list.add("laaaast");
+            i.remove();
+            i.next();
 //            System.out.printf("polled: %s", polled);
             System.out.println();
             System.out.println(i.previousIndex());
-            System.out.printf("last: %s", lastItered);
             System.out.println();
 //            ConcurrentModificationException
-        } catch (InputMismatchException CMEerror) {
+        } catch (ConcurrentModificationException CMEerror) {
             System.out.println(CMEerror);
             System.out.println(CMEerror.getMessage());
         } finally {
